@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prestige Immo — Luxury Real Estate Tunisia</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --gold: #C9A96E;
+  --gold-light: #E8D5B0;
+  --dark: #0E0E0E;
+  --dark2: #1A1A1A;
+  --dark3: #252525;
+  --text: #F5F0E8;
+  --muted: #888880;
+  --muted2: #555550;
+  --border: #2A2A2A;
+  --white: #FFFFFF;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+
+/* CURSOR */
+.cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.1s;}
+.cursor-ring{position:fixed;width:40px;height:40px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transition:width 0.3s,height 0.3s,opacity 0.3s;opacity:0.4;}
+body{cursor:none;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 60px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(14,14,14,0.95),transparent);backdrop-filter:blur(10px);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);text-decoration:none;letter-spacing:0.05em;}
+.nav-logo span{color:var(--gold);}
+.nav-links{display:flex;gap:40px;list-style:none;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-btn{font-family:'DM Mono',monospace;font-size:11px;color:var(--dark);background:var(--gold);padding:10px 22px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:opacity 0.2s;}
+.nav-btn:hover{opacity:0.85;}
+
+/* HERO */
+.hero{min-height:100vh;position:relative;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0E0E0E 0%,#1a1208 50%,#0E0E0E 100%);}
+.hero-pattern{position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%);background-size:20px 20px;}
+.hero-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(201,169,110,0.08) 0%,transparent 70%);top:-100px;right:-100px;}
+.hero-img{position:absolute;right:0;top:0;width:55%;height:100%;object-fit:cover;opacity:0.3;filter:sepia(20%);}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,var(--dark) 40%,transparent 80%);}
+
+.hero-content{position:relative;z-index:1;padding:0 60px 100px;max-width:700px;}
+.hero-badge{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.hero-badge::before{content:'';display:block;width:40px;height:1px;background:var(--gold);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(56px,7vw,96px);line-height:0.9;letter-spacing:-2px;font-weight:300;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-title strong{font-weight:600;display:block;}
+.hero-sub{font-size:15px;color:var(--muted);max-width:440px;line-height:1.8;margin:28px 0 48px;font-weight:300;}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-gold{font-family:'DM Mono',monospace;font-size:11px;color:var(--dark);background:var(--gold);padding:14px 32px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;display:inline-block;}
+.btn-gold:hover{opacity:0.85;transform:translateY(-2px);}
+.btn-outline{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);border:1px solid var(--gold);padding:14px 32px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;display:inline-block;}
+.btn-outline:hover{background:var(--gold);color:var(--dark);}
+
+.hero-stats{position:absolute;right:60px;bottom:80px;display:flex;flex-direction:column;gap:28px;text-align:right;}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:600;color:var(--gold);line-height:1;}
+.stat-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:4px;}
+
+.scroll-line{position:absolute;bottom:40px;left:60px;display:flex;align-items:center;gap:12px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;}
+.scroll-line::before{content:'';display:block;width:50px;height:1px;background:var(--gold);animation:scrollAnim 2s infinite;}
+@keyframes scrollAnim{0%{width:0}50%{width:50px}100%{width:0}}
+
+/* MARQUEE */
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 0;background:var(--dark2);}
+.marquee-track{display:flex;gap:60px;animation:marquee 25s linear infinite;white-space:nowrap;}
+.marquee-item{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;flex-shrink:0;display:flex;align-items:center;gap:60px;}
+.marquee-sep{color:var(--gold);font-size:14px;}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* SEARCH BAR */
+.search-section{padding:60px;background:var(--dark2);border-bottom:1px solid var(--border);}
+.search-title{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:400;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:24px;}
+.search-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:1px;background:var(--border);}
+.search-field{background:var(--dark3);padding:18px 24px;}
+.search-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;}
+.search-input{background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;width:100%;}
+.search-input::placeholder{color:var(--muted2);}
+select.search-input{cursor:pointer;}
+select.search-input option{background:var(--dark3);}
+.search-btn{background:var(--gold);color:var(--dark);border:none;padding:18px 32px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;}
+.search-btn:hover{opacity:0.85;}
+
+/* SECTION */
+section{padding:100px 60px;}
+.sec-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+.sec-tag::before{content:'';display:block;width:24px;height:1px;background:var(--gold);}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,60px);line-height:1;letter-spacing:-1px;font-weight:300;margin-bottom:60px;}
+.sec-title em{font-style:italic;color:var(--gold);}
+
+/* PROPERTIES GRID */
+.properties{background:var(--dark);}
+.props-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;}
+.filter-tabs{display:flex;gap:4px;}
+.filter-tab{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:8px 18px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.08em;background:transparent;}
+.filter-tab.active,.filter-tab:hover{background:var(--gold);color:var(--dark);border-color:var(--gold);}
+.props-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);}
+.prop-card{background:var(--dark2);overflow:hidden;position:relative;transition:transform 0.4s;}
+.prop-card:hover{transform:translateY(-4px);}
+.prop-img{height:260px;position:relative;overflow:hidden;}
+.prop-img-inner{width:100%;height:100%;object-fit:cover;transition:transform 0.6s;background:linear-gradient(135deg,#1a1a2e,#2d1b1b);}
+.prop-card:hover .prop-img-inner{transform:scale(1.05);}
+.prop-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(14,14,14,0.7),transparent 60%);}
+.prop-badge{position:absolute;top:16px;left:16px;font-family:'DM Mono',monospace;font-size:9px;color:var(--dark);background:var(--gold);padding:4px 10px;letter-spacing:0.1em;text-transform:uppercase;}
+.prop-price{position:absolute;bottom:16px;right:16px;font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--white);font-weight:600;}
+.prop-info{padding:24px;}
+.prop-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--text);margin-bottom:6px;}
+.prop-location{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:6px;}
+.prop-location i{color:var(--gold);font-size:10px;}
+.prop-specs{display:flex;gap:20px;padding-top:16px;border-top:1px solid var(--border);}
+.prop-spec{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.06em;display:flex;align-items:center;gap:6px;}
+.prop-spec i{color:var(--gold);font-size:11px;}
+.prop-spec span{font-size:12px;color:var(--text);}
+.prop-link{display:block;padding:14px 24px;background:var(--dark3);font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;text-align:center;transition:all 0.2s;border-top:1px solid var(--border);}
+.prop-link:hover{background:var(--gold);color:var(--dark);}
+
+/* FEATURED */
+.featured{background:var(--dark2);border-top:1px solid var(--border);}
+.featured-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:2px;background:var(--border);}
+.featured-main{position:relative;min-height:500px;overflow:hidden;}
+.featured-main-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a2a1a,#0d1a0d);display:flex;align-items:center;justify-content:center;font-size:80px;opacity:0.15;}
+.featured-main-overlay{position:absolute;inset:0;background:linear-gradient(to top,var(--dark) 0%,transparent 60%);}
+.featured-main-content{position:absolute;bottom:0;left:0;right:0;padding:40px;}
+.featured-tag{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;}
+.featured-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--white);margin-bottom:8px;}
+.featured-price{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);font-weight:600;}
+.featured-side{display:flex;flex-direction:column;gap:2px;background:var(--border);}
+.featured-small{background:var(--dark3);padding:28px;position:relative;flex:1;border-bottom:1px solid var(--border);}
+.fs-tag{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;}
+.fs-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);margin-bottom:4px;}
+.fs-price{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);}
+.fs-loc{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:8px;}
+
+/* WHY US */
+.why{background:var(--dark);border-top:1px solid var(--border);}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.why-card{background:var(--dark2);padding:40px 32px;transition:background 0.3s;}
+.why-card:hover{background:var(--dark3);}
+.why-icon{font-size:32px;color:var(--gold);margin-bottom:24px;display:block;}
+.why-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:0.1em;margin-bottom:12px;}
+.why-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--text);margin-bottom:12px;}
+.why-desc{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300;}
+
+/* CONTACT */
+.contact-section{background:var(--dark2);border-top:1px solid var(--border);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.contact-info{}
+.contact-form-wrap{background:var(--dark3);padding:48px;border:1px solid var(--border);}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--text);margin-bottom:32px;}
+.form-group{margin-bottom:20px;}
+.form-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;display:block;margin-bottom:8px;}
+.form-input{width:100%;background:var(--dark2);border:1px solid var(--border);color:var(--text);padding:14px 18px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--muted2);}
+textarea.form-input{resize:vertical;min-height:120px;}
+.form-btn{width:100%;background:var(--gold);color:var(--dark);border:none;padding:16px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;margin-top:8px;}
+.form-btn:hover{opacity:0.85;}
+.contact-detail{margin-bottom:28px;}
+.contact-detail-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;}
+.contact-detail-val{font-size:15px;color:var(--text);font-weight:300;}
+
+/* FOOTER */
+footer{background:var(--dark);border-top:1px solid var(--border);padding:40px 60px;display:flex;justify-content:space-between;align-items:center;}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text);}
+.footer-logo span{color:var(--gold);}
+.footer-links{display:flex;gap:32px;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:0.05em;}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+/* PROPERTY VISUAL PLACEHOLDERS */
+.prop-visual{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:60px;opacity:0.2;}
+.v1{background:linear-gradient(135deg,#1a2a1a,#0d1a0d);}
+.v2{background:linear-gradient(135deg,#1a1a2e,#0d0d1a);}
+.v3{background:linear-gradient(135deg,#2a1a1a,#1a0d0d);}
+.v4{background:linear-gradient(135deg,#1a2520,#0d1a15);}
+.v5{background:linear-gradient(135deg,#252015,#1a1505);}
+.v6{background:linear-gradient(135deg,#201525,#150d1a);}
+
+@media(max-width:768px){
+  nav{padding:20px 24px;}
+  .nav-links{display:none;}
+  .hero-content{padding:0 24px 80px;}
+  .hero-stats{display:none;}
+  section{padding:60px 24px;}
+  .search-bar{grid-template-columns:1fr;}
+  .search-section{padding:40px 24px;}
+  .props-grid{grid-template-columns:1fr;}
+  .featured-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr 1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:16px;text-align:center;padding:32px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Prestige<span>Immo</span></a>
+  <ul class="nav-links">
+    <li><a href="#properties">Properties</a></li>
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="admin.html" class="nav-btn">Admin Panel</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Premier Real Estate — Tunisia</div>
+    <h1 class="hero-title">
+      Find Your<br>
+      <em>Perfect</em><br>
+      <strong>Property</strong>
+    </h1>
+    <p class="hero-sub">Discover exceptional properties across Tunisia's most prestigious locations. From luxury villas to modern apartments — curated for the discerning buyer.</p>
+    <div class="hero-actions">
+      <a href="#properties" class="btn-gold">Browse Properties</a>
+      <a href="#contact" class="btn-outline">Book a Visit</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-val">240+</div><div class="stat-lbl">Properties Listed</div></div>
+    <div><div class="stat-val">12</div><div class="stat-lbl">Years Experience</div></div>
+    <div><div class="stat-val">98%</div><div class="stat-lbl">Client Satisfaction</div></div>
+  </div>
+  <div class="scroll-line">Scroll to explore</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Tunis <span class="marquee-sep">✦</span> La Marsa <span class="marquee-sep">✦</span> Sidi Bou Saïd <span class="marquee-sep">✦</span> Les Berges du Lac <span class="marquee-sep">✦</span> Hammamet <span class="marquee-sep">✦</span> Sousse <span class="marquee-sep">✦</span> Carthage <span class="marquee-sep">✦</span> Gammarth <span class="marquee-sep">✦</span> Menzah <span class="marquee-sep">✦</span> Ennasr <span class="marquee-sep">✦</span></div>
+    <div class="marquee-item">Tunis <span class="marquee-sep">✦</span> La Marsa <span class="marquee-sep">✦</span> Sidi Bou Saïd <span class="marquee-sep">✦</span> Les Berges du Lac <span class="marquee-sep">✦</span> Hammamet <span class="marquee-sep">✦</span> Sousse <span class="marquee-sep">✦</span> Carthage <span class="marquee-sep">✦</span> Gammarth <span class="marquee-sep">✦</span> Menzah <span class="marquee-sep">✦</span> Ennasr <span class="marquee-sep">✦</span></div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-title">Search Properties</div>
+  <div class="search-bar">
+    <div class="search-field">
+      <div class="search-label">Location</div>
+      <select class="search-input">
+        <option value="">All Locations</option>
+        <option>La Marsa</option>
+        <option>Les Berges du Lac</option>
+        <option>Sidi Bou Saïd</option>
+        <option>Hammamet</option>
+        <option>Carthage</option>
+        <option>Gammarth</option>
+        <option>Menzah</option>
+        <option>Ennasr</option>
+      </select>
+    </div>
+    <div class="search-field">
+      <div class="search-label">Property Type</div>
+      <select class="search-input">
+        <option value="">All Types</option>
+        <option>Villa</option>
+        <option>Apartment</option>
+        <option>Duplex</option>
+        <option>Commercial</option>
+        <option>Land</option>
+      </select>
+    </div>
+    <div class="search-field">
+      <div class="search-label">Max Price (TND)</div>
+      <select class="search-input">
+        <option value="">Any Price</option>
+        <option>Under 300,000</option>
+        <option>300,000 – 600,000</option>
+        <option>600,000 – 1,000,000</option>
+        <option>Over 1,000,000</option>
+      </select>
+    </div>
+    <div class="search-field">
+      <div class="search-label">Bedrooms</div>
+      <select class="search-input">
+        <option value="">Any</option>
+        <option>1+</option>
+        <option>2+</option>
+        <option>3+</option>
+        <option>4+</option>
+        <option>5+</option>
+      </select>
+    </div>
+    <button class="search-btn" onclick="filterProps()">Search</button>
+  </div>
+</div>
+
+<!-- PROPERTIES -->
+<section class="properties" id="properties">
+  <div class="props-header fade-up">
+    <div>
+      <div class="sec-tag">Our Listings</div>
+      <h2 class="sec-title" style="margin-bottom:0">Available <em>Properties</em></h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-tab" onclick="setFilter('villa',this)">Villa</button>
+      <button class="filter-tab" onclick="setFilter('apartment',this)">Apartment</button>
+      <button class="filter-tab" onclick="setFilter('duplex',this)">Duplex</button>
+    </div>
+  </div>
+  <div class="props-grid" id="propsGrid">
+
+    <div class="prop-card fade-up" data-type="villa">
+      <div class="prop-img">
+        <div class="prop-visual v1">🏡</div>
+        <div class="prop-img-overlay"></div>
+        <div class="prop-badge">For Sale</div>
+        <div class="prop-price">850,000 TND</div>
+      </div>
+      <div class="prop-info">
+        <div class="prop-title">Luxury Villa with Sea View</div>
+        <div class="prop-location"><i class="fas fa-map-pin"></i>La Marsa, Tunis</div>
+        <div class="prop-specs">
+          <div class="prop-spec"><i class="fas fa-bed"></i><span>5 beds</span></div>
+          <div class="prop-spec"><i class="fas fa-bath"></i><span>3 baths</span></div>
+          <div class="prop-spec"><i class="fas fa-ruler-combined"></i><span>320 m²</span></div>
+          <div class="prop-spec"><i class="fas fa-car"></i><span>Garage</span></div>
+        </div>
+      </div>
+      <a href="property.html" class="prop-link">View Details →</a>
+    </div>
+
+    <div class="prop-card fade-up" data-type="apartment">
+      <div class="prop-img">
+        <div class="prop-visual v2">🏢</div>
+        <div class="prop-img-overlay"></div>
+        <div class="prop-badge">For Rent</div>
+        <div class="prop-price">2,400 TND/mo</div>
+      </div>
+      <div class="prop-info">
+        <div class="prop-title">Modern Apartment — Lac 2</div>
+        <div class="prop-location"><i class="fas fa-map-pin"></i>Les Berges du Lac, Tunis</div>
+        <div class="prop-specs">
+          <div class="prop-spec"><i class="fas fa-bed"></i><span>3 beds</span></div>
+          <div class="prop-spec"><i class="fas fa-bath"></i><span>2 baths</span></div>
+          <div class="prop-spec"><i class="fas fa-ruler-combined"></i><span>145 m²</span></div>
+          <div class="prop-spec"><i class="fas fa-swimming-pool"></i><span>Pool</span></div>
+        </div>
+      </div>
+      <a href="property.html" class="prop-link">View Details →</a>
+    </div>
+
+    <div class="prop-card fade-up" data-type="villa">
+      <div class="prop-img">
+        <div class="prop-visual v3">🏠</div>
+        <div class="prop-img-overlay"></div>
+        <div class="prop-badge">For Sale</div>
+        <div class="prop-price">1,200,000 TND</div>
+      </div>
+      <div class="prop-info">
+        <div class="prop-title">Prestige Villa — Sidi Bou Saïd</div>
+        <div class="prop-location"><i class="fas fa-map-pin"></i>Sidi Bou Saïd, Tunis</div>
+        <div class="prop-specs">
+          <div class="prop-spec"><i class="fas fa-bed"></i><span>6 beds</span></div>
+          <div class="prop-spec"><i class="fas fa-bath"></i><span>4 baths</span></div>
+          <div class="prop-spec"><i class="fas fa-ruler-combined"></i><span>480 m²</span></div>
+          <div class="prop-spec"><i class="fas fa-swimming-pool"></i><span>Pool</span></div>
+        </div>
+      </div>
+      <a href="property.html" class="prop-link">View Details →</a>
+    </div>
+
+    <div class="prop-card fade-up" data-type="duplex">
+      <div class="prop-img">
+        <div class="prop-visual v4">🏗️</div>
+        <div class="prop-img-overlay"></div>
+        <div class="prop-badge">For Sale</div>
+        <div class="prop-price">420,000 TND</div>
+      </div>
+      <div class="prop-info">
+        <div class="prop-title">Contemporary Duplex</div>
+        <div class="prop-location"><i class="fas fa-map-pin"></i>Menzah 9, Tunis</div>
+        <div class="prop-specs">
+          <div class="prop-spec"><i class="fas fa-bed"></i><span>4 beds</span></div>
+          <div class="prop-spec"><i class="fas fa-bath"></i><span>2 baths</span></div>
+          <div class="prop-spec"><i class="fas fa-ruler-combined"></i><span>210 m²</span></div>
+          <div class="prop-spec"><i class="fas fa-car"></i><span>Garage</span></div>
+        </div>
+      </div>
+      <a href="property.html" class="prop-link">View Details →</a>
+    </div>
+
+    <div class="prop-card fade-up" data-type="apartment">
+      <div class="prop-img">
+        <div class="prop-visual v5">🏙️</div>
+        <div class="prop-img-overlay"></div>
+        <div class="prop-badge">For Rent</div>
+        <div class="prop-price">1,800 TND/mo</div>
+      </div>
+      <div class="prop-info">
+        <div class="prop-title">Bright Studio — Ennasr</div>
+        <div class="prop-location"><i class="fas fa-map-pin"></i>Ennasr 2, Ariana</div>
+        <div class="prop-specs">
+          <div class="prop-spec"><i class="fas fa-bed"></i><span>2 beds</span></div>
+          <div class="prop-spec"><i class="fas fa-bath"></i><span>1 bath</span></div>
+          <div class="prop-spec"><i class="fas fa-ruler-combined"></i><span>88 m²</span></div>
+          <div class="prop-spec"><i class="fas fa-elevator"></i><span>Elevator</span></div>
+        </div>
+      </div>
+      <a href="property.html" class="prop-link">View Details →</a>
+    </div>
+
+    <div class="prop-card fade-up" data-type="villa">
+      <div class="prop-img">
+        <div class="prop-visual v6">🌊</div>
+        <div class="prop-img-overlay"></div>
+        <div class="prop-badge">For Sale</div>
+        <div class="prop-price">2,800,000 TND</div>
+      </div>
+      <div class="prop-info">
+        <div class="prop-title">Beachfront Villa — Hammamet</div>
+        <div class="prop-location"><i class="fas fa-map-pin"></i>Hammamet Nord</div>
+        <div class="prop-specs">
+          <div class="prop-spec"><i class="fas fa-bed"></i><span>7 beds</span></div>
+          <div class="prop-spec"><i class="fas fa-bath"></i><span>5 baths</span></div>
+          <div class="prop-spec"><i class="fas fa-ruler-combined"></i><span>650 m²</span></div>
+          <div class="prop-spec"><i class="fas fa-swimming-pool"></i><span>Pool</span></div>
+        </div>
+      </div>
+      <a href="property.html" class="prop-link">View Details →</a>
+    </div>
+
+  </div>
+  <div style="text-align:center;margin-top:48px;">
+    <a href="listings.html" class="btn-outline">View All Properties</a>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<section class="featured" id="featured">
+  <div class="sec-tag fade-up">Spotlight</div>
+  <h2 class="sec-title fade-up">Featured <em>Listings</em></h2>
+  <div class="featured-grid fade-up">
+    <div class="featured-main">
+      <div class="featured-main-bg">🏰</div>
+      <div class="featured-main-overlay"></div>
+      <div class="featured-main-content">
+        <div class="featured-tag">⭐ Property of the Month</div>
+        <div class="featured-title">Historical Riad — Sidi Bou Saïd</div>
+        <div class="featured-price">3,500,000 TND</div>
+        <p style="color:var(--muted);font-size:13px;margin:12px 0;max-width:400px;font-weight:300;">A rare opportunity to own a meticulously restored 18th-century riad in the iconic blue-and-white village, with panoramic sea views and a private courtyard.</p>
+        <a href="property.html" class="btn-gold" style="margin-top:16px;display:inline-block;">View Details →</a>
+      </div>
+    </div>
+    <div class="featured-side">
+      <div class="featured-small">
+        <div class="fs-tag">⭐ Featured</div>
+        <div class="fs-title">Penthouse — Les Berges du Lac</div>
+        <div class="fs-price">1,850,000 TND</div>
+        <div class="fs-loc"><i class="fas fa-map-pin" style="color:var(--gold)"></i> Les Berges du Lac II, Tunis</div>
+        <p style="color:var(--muted);font-size:12px;margin-top:10px;font-weight:300;">Spectacular 360° view penthouse with private rooftop terrace, 4 bedrooms, and premium finishes throughout.</p>
+        <a href="property.html" class="prop-link" style="display:block;margin:16px -28px -28px;padding:14px 28px;">View Details →</a>
+      </div>
+      <div class="featured-small">
+        <div class="fs-tag">🔥 New Listing</div>
+        <div class="fs-title">Modern Villa — Gammarth</div>
+        <div class="fs-price">960,000 TND</div>
+        <div class="fs-loc"><i class="fas fa-map-pin" style="color:var(--gold)"></i> Gammarth Superior, Tunis</div>
+        <p style="color:var(--muted);font-size:12px;margin-top:10px;font-weight:300;">Brand new 5-bedroom villa with infinity pool, smart home system, and direct beach access.</p>
+        <a href="property.html" class="prop-link" style="display:block;margin:16px -28px -28px;padding:14px 28px;">View Details →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why" id="about">
+  <div class="sec-tag fade-up">Why Choose Us</div>
+  <h2 class="sec-title fade-up">The Prestige <em>Difference</em></h2>
+  <div class="why-grid">
+    <div class="why-card fade-up">
+      <div class="why-num">01</div>
+      <span class="why-icon">🏆</span>
+      <div class="why-title">12 Years of Excellence</div>
+      <div class="why-desc">Over a decade of experience in Tunisia's premium real estate market, with an unmatched portfolio of exclusive properties.</div>
+    </div>
+    <div class="why-card fade-up">
+      <div class="why-num">02</div>
+      <span class="why-icon">🔍</span>
+      <div class="why-title">Expert Property Search</div>
+      <div class="why-desc">Our agents know every neighborhood intimately. We match you with properties that truly fit your lifestyle and investment goals.</div>
+    </div>
+    <div class="why-card fade-up">
+      <div class="why-num">03</div>
+      <span class="why-icon">🤝</span>
+      <div class="why-title">End-to-End Support</div>
+      <div class="why-desc">From the first visit to signing the contract, we guide you through every step with full legal and administrative support.</div>
+    </div>
+    <div class="why-card fade-up">
+      <div class="why-num">04</div>
+      <span class="why-icon">📊</span>
+      <div class="why-title">Market Intelligence</div>
+      <div class="why-desc">Access to real-time market data and investment analysis to ensure you make the best possible decision for your budget.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-grid">
+    <div class="contact-info fade-up">
+      <div class="sec-tag">Get In Touch</div>
+      <h2 class="sec-title">Book a <em>Visit</em></h2>
+      <p style="color:var(--muted);font-size:14px;line-height:1.8;max-width:400px;font-weight:300;margin-bottom:48px;">Whether you're buying, selling, or renting — our team is ready to help you find exactly what you're looking for.</p>
+      <div class="contact-detail">
+        <div class="contact-detail-label">📞 Phone</div>
+        <div class="contact-detail-val">+216 71 123 456</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">✉️ Email</div>
+        <div class="contact-detail-val">contact@prestigeimmo.tn</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">📍 Address</div>
+        <div class="contact-detail-val">Immeuble Titanium, Les Berges du Lac II, Tunis</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">🕐 Office Hours</div>
+        <div class="contact-detail-val">Mon–Fri: 9:00 AM – 6:00 PM<br>Sat: 10:00 AM – 3:00 PM</div>
+      </div>
+    </div>
+    <div class="fade-up">
+      <div class="contact-form-wrap">
+        <div class="form-title">Request a Viewing</div>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" placeholder="+216 XX XXX XXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Property Interest</label>
+          <select class="form-input">
+            <option>Villa</option>
+            <option>Apartment</option>
+            <option>Duplex</option>
+            <option>Any</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-input" placeholder="Tell us what you're looking for..."></textarea>
+        </div>
+        <button class="form-btn" onclick="submitForm()">Send Request →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Prestige<span>Immo</span></div>
+  <div class="footer-links">
+    <a href="#properties">Properties</a>
+    <a href="#featured">Featured</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a href="admin.html">Admin</a>
+  </div>
+  <div class="footer-copy">© 2026 PrestigeImmo — Built by buildTN</div>
+</footer>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-4+'px';cursor.style.top=my-4+'px';});
+function animRing(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx-20+'px';ring.style.top=ry-20+'px';requestAnimationFrame(animRing);}
+animRing();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='60px';ring.style.height='60px';ring.style.opacity='0.7';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='40px';ring.style.height='40px';ring.style.opacity='0.4';});
+});
+
+// Scroll animations
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*100);});
+},{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// Filter
+function setFilter(type,btn){
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.prop-card').forEach(c=>{
+    if(type==='all'||c.dataset.type===type){c.style.display='block';}
+    else{c.style.display='none';}
+  });
+}
+
+function filterProps(){
+  alert('Search functionality connected to Django backend in the full version!');
+}
+
+function submitForm(){
+  const btn = document.querySelector('.form-btn');
+  btn.textContent = '✅ Request Sent Successfully!';
+  btn.style.background = '#2ECC71';
+  setTimeout(()=>{btn.textContent='Send Request →';btn.style.background='';},3000);
+}
+</script>
+</body>
+</html>
