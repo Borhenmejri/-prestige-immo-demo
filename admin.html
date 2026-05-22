@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — PrestigeImmo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--gold:#C9A96E;--dark:#0E0E0E;--dark2:#141414;--dark3:#1A1A1A;--dark4:#222;--border:#2A2A2A;--text:#F0ECE3;--muted:#888;--muted2:#555;--green:#2ECC71;--red:#E74C3C;--blue:#3498DB;--orange:#F39C12;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;display:grid;grid-template-columns:240px 1fr;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{background:var(--dark2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;width:240px;overflow-y:auto;}
+.sidebar-logo{padding:28px 24px;border-bottom:1px solid var(--border);}
+.sidebar-logo-text{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text);}
+.sidebar-logo-text span{color:var(--gold);}
+.sidebar-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;}
+.sidebar-nav{padding:20px 0;flex:1;}
+.nav-section{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;padding:16px 24px 8px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 24px;font-size:13px;color:var(--muted);text-decoration:none;transition:all 0.2s;cursor:pointer;border-left:2px solid transparent;}
+.nav-item i{width:16px;font-size:13px;color:var(--muted2);}
+.nav-item:hover,.nav-item.active{color:var(--text);background:rgba(201,169,110,0.06);border-left-color:var(--gold);}
+.nav-item.active i,.nav-item:hover i{color:var(--gold);}
+.sidebar-user{padding:20px 24px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.user-avatar{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--dark);}
+.user-name{font-size:13px;color:var(--text);font-weight:500;}
+.user-role{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;}
+
+/* MAIN */
+.main{margin-left:240px;display:flex;flex-direction:column;}
+.topbar{background:var(--dark2);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+.topbar-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--text);}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-btn{font-family:'DM Mono',monospace;font-size:10px;color:var(--dark);background:var(--gold);border:none;padding:9px 20px;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;transition:opacity 0.2s;}
+.topbar-btn:hover{opacity:0.85;}
+.topbar-icon{width:36px;height:36px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.topbar-icon:hover{border-color:var(--gold);color:var(--gold);}
+.notif{position:relative;}
+.notif-dot{position:absolute;top:6px;right:6px;width:6px;height:6px;background:var(--red);border-radius:50%;}
+
+/* CONTENT */
+.content{padding:32px;flex:1;}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+.kpi-card{background:var(--dark3);border:1px solid var(--border);padding:24px;position:relative;overflow:hidden;}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent-color);}
+.kpi-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px;}
+.kpi-val{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:var(--text);line-height:1;}
+.kpi-change{font-family:'DM Mono',monospace;font-size:10px;margin-top:8px;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+.kpi-icon{position:absolute;top:20px;right:20px;font-size:20px;opacity:0.3;}
+
+/* CHARTS ROW */
+.charts-row{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:32px;}
+.chart-card{background:var(--dark3);border:1px solid var(--border);padding:24px;}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.card-title{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;}
+.card-action{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;}
+
+/* BAR CHART */
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:140px;padding-bottom:24px;position:relative;}
+.bar-chart::after{content:'';position:absolute;bottom:24px;left:0;right:0;height:1px;background:var(--border);}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bar{width:100%;background:var(--gold);opacity:0.8;border-radius:2px 2px 0 0;transition:opacity 0.2s;position:relative;}
+.bar:hover{opacity:1;}
+.bar-lbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:0.05em;}
+
+/* DONUT */
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:24px;}
+.donut{width:140px;height:140px;border-radius:50%;background:conic-gradient(var(--gold) 0% 42%,var(--blue) 42% 66%,var(--green) 66% 82%,var(--red) 82% 100%);position:relative;}
+.donut-hole{position:absolute;inset:20px;background:var(--dark3);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.donut-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);}
+.donut-sub{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.donut-legend{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;}
+.legend-item{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* BOTTOM GRID */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* TABLE */
+.table-card{background:var(--dark3);border:1px solid var(--border);}
+.table-card .card-header{padding:20px 24px;border-bottom:1px solid var(--border);margin-bottom:0;}
+.table{width:100%;border-collapse:collapse;}
+.table th{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:14px 20px;text-align:left;background:var(--dark2);border-bottom:1px solid var(--border);}
+.table td{padding:14px 20px;font-size:13px;border-bottom:1px solid var(--border);}
+.table tr:last-child td{border-bottom:none;}
+.table tr:hover td{background:rgba(201,169,110,0.03);}
+.badge{font-family:'DM Mono',monospace;font-size:9px;padding:3px 10px;letter-spacing:0.06em;text-transform:uppercase;}
+.badge-sale{background:rgba(52,152,219,0.15);color:var(--blue);}
+.badge-rent{background:rgba(46,204,113,0.15);color:var(--green);}
+.badge-new{background:rgba(201,169,110,0.15);color:var(--gold);}
+.badge-pending{background:rgba(243,156,18,0.15);color:var(--orange);}
+.badge-done{background:rgba(46,204,113,0.15);color:var(--green);}
+.table-action{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);cursor:pointer;letter-spacing:0.06em;}
+
+/* ADD PROPERTY FORM */
+.add-form{background:var(--dark3);border:1px solid var(--border);padding:0;}
+.add-form .card-header{padding:20px 24px;border-bottom:1px solid var(--border);margin-bottom:0;}
+.form-body{padding:24px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.field-group{display:flex;flex-direction:column;gap:6px;}
+.field-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;}
+.field-input{background:var(--dark2);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s;}
+.field-input:focus{border-color:var(--gold);}
+.field-input::placeholder{color:var(--muted2);}
+select.field-input{cursor:pointer;}
+select.field-input option{background:var(--dark2);}
+.form-submit{width:100%;background:var(--gold);color:var(--dark);border:none;padding:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;margin-top:8px;transition:opacity 0.2s;}
+.form-submit:hover{opacity:0.85;}
+
+/* ACTIVITY */
+.activity-list{padding:0 24px 16px;}
+.activity-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.activity-text{font-size:13px;color:var(--text);line-height:1.5;}
+.activity-time{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:0.05em;}
+
+a{text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">Prestige<span>Immo</span></div>
+    <div class="sidebar-sub">Admin Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active"><i class="fas fa-th-large"></i> Overview</div>
+    <a href="listings.html" class="nav-item"><i class="fas fa-building"></i> Properties</a>
+    <div class="nav-item"><i class="fas fa-calendar-check"></i> Visit Requests</div>
+    <div class="nav-item"><i class="fas fa-users"></i> Clients</div>
+    <div class="nav-section">Analytics</div>
+    <div class="nav-item"><i class="fas fa-chart-bar"></i> Reports</div>
+    <div class="nav-item"><i class="fas fa-map-marker-alt"></i> Locations</div>
+    <div class="nav-section">Settings</div>
+    <div class="nav-item"><i class="fas fa-cog"></i> Settings</div>
+    <div class="nav-item"><i class="fas fa-user-shield"></i> Users</div>
+    <a href="index.html" class="nav-item"><i class="fas fa-external-link-alt"></i> View Site</a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar">BM</div>
+    <div>
+      <div class="user-name">Borhen Mejri</div>
+      <div class="user-role">Administrator</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Dashboard Overview</div>
+    <div class="topbar-right">
+      <div class="topbar-icon notif"><i class="fas fa-bell"></i><div class="notif-dot"></div></div>
+      <div class="topbar-icon"><i class="fas fa-search"></i></div>
+      <button class="topbar-btn" onclick="showAddForm()">+ Add Property</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--accent-color:var(--gold)">
+        <div class="kpi-label">Total Properties</div>
+        <div class="kpi-val">247</div>
+        <div class="kpi-change up">↑ +12 this month</div>
+        <div class="kpi-icon">🏠</div>
+      </div>
+      <div class="kpi-card" style="--accent-color:var(--green)">
+        <div class="kpi-label">Active Listings</div>
+        <div class="kpi-val">183</div>
+        <div class="kpi-change up">↑ +8 this week</div>
+        <div class="kpi-icon">✅</div>
+      </div>
+      <div class="kpi-card" style="--accent-color:var(--blue)">
+        <div class="kpi-label">Visit Requests</div>
+        <div class="kpi-val">34</div>
+        <div class="kpi-change up">↑ +6 today</div>
+        <div class="kpi-icon">📅</div>
+      </div>
+      <div class="kpi-card" style="--accent-color:var(--orange)">
+        <div class="kpi-label">Revenue (TND)</div>
+        <div class="kpi-val">2.4M</div>
+        <div class="kpi-change up">↑ +18% vs last month</div>
+        <div class="kpi-icon">💰</div>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">Monthly Listings Added</div>
+          <div class="card-action">View Report →</div>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-wrap"><div class="bar" style="height:55%"></div><div class="bar-lbl">Jan</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:70%"></div><div class="bar-lbl">Feb</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:48%"></div><div class="bar-lbl">Mar</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:82%"></div><div class="bar-lbl">Apr</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:65%"></div><div class="bar-lbl">May</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:90%"></div><div class="bar-lbl">Jun</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:75%"></div><div class="bar-lbl">Jul</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:88%"></div><div class="bar-lbl">Aug</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:60%"></div><div class="bar-lbl">Sep</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:95%"></div><div class="bar-lbl">Oct</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:78%"></div><div class="bar-lbl">Nov</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:100%"></div><div class="bar-lbl">Dec</div></div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">Property Types</div>
+          <div class="card-action">Details →</div>
+        </div>
+        <div class="donut-wrap">
+          <div class="donut">
+            <div class="donut-hole">
+              <div class="donut-num">247</div>
+              <div class="donut-sub">Total</div>
+            </div>
+          </div>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Villa (42%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Apartment (24%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Duplex (16%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Other (18%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="bottom-grid">
+
+      <!-- RECENT PROPERTIES TABLE -->
+      <div class="table-card">
+        <div class="card-header">
+          <div class="card-title">Recent Properties</div>
+          <a href="listings.html" class="card-action">View All →</a>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Type</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Villa La Marsa</td>
+              <td><span class="badge badge-sale">Sale</span></td>
+              <td>850K TND</td>
+              <td><span class="badge badge-new">New</span></td>
+              <td><span class="table-action">Edit</span></td>
+            </tr>
+            <tr>
+              <td>Apt Berges du Lac</td>
+              <td><span class="badge badge-rent">Rent</span></td>
+              <td>2,400/mo</td>
+              <td><span class="badge badge-done">Active</span></td>
+              <td><span class="table-action">Edit</span></td>
+            </tr>
+            <tr>
+              <td>Villa Sidi Bou Saïd</td>
+              <td><span class="badge badge-sale">Sale</span></td>
+              <td>1.2M TND</td>
+              <td><span class="badge badge-done">Active</span></td>
+              <td><span class="table-action">Edit</span></td>
+            </tr>
+            <tr>
+              <td>Duplex Menzah 9</td>
+              <td><span class="badge badge-sale">Sale</span></td>
+              <td>420K TND</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><span class="table-action">Edit</span></td>
+            </tr>
+            <tr>
+              <td>Villa Hammamet</td>
+              <td><span class="badge badge-sale">Sale</span></td>
+              <td>2.8M TND</td>
+              <td><span class="badge badge-new">New</span></td>
+              <td><span class="table-action">Edit</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- VISIT REQUESTS + ACTIVITY -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="table-card">
+          <div class="card-header">
+            <div class="card-title">Recent Visit Requests</div>
+            <div class="card-action">View All →</div>
+          </div>
+          <table class="table">
+            <thead>
+              <tr><th>Client</th><th>Property</th><th>Date</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ahmed Ben Ali</td>
+                <td>Villa La Marsa</td>
+                <td>22 May</td>
+                <td><span class="badge badge-pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td>Sarah Mansouri</td>
+                <td>Apt Lac 2</td>
+                <td>21 May</td>
+                <td><span class="badge badge-done">Confirmed</span></td>
+              </tr>
+              <tr>
+                <td>Mohamed Trabelsi</td>
+                <td>Villa SBS</td>
+                <td>20 May</td>
+                <td><span class="badge badge-done">Done</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-card">
+          <div class="card-header">
+            <div class="card-title">Recent Activity</div>
+            <div class="card-action">View All →</div>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--gold)"></div>
+              <div>
+                <div class="activity-text">New property added — Villa Hammamet Nord</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--blue)"></div>
+              <div>
+                <div class="activity-text">Visit request received from Ahmed Ben Ali</div>
+                <div class="activity-time">4 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--green)"></div>
+              <div>
+                <div class="activity-text">Property sold — Duplex Menzah 9 — 420,000 TND</div>
+                <div class="activity-time">Yesterday</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--orange)"></div>
+              <div>
+                <div class="activity-text">Price updated — Penthouse Les Berges du Lac</div>
+                <div class="activity-time">2 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD PROPERTY MODAL -->
+    <div id="addModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center;">
+      <div style="background:var(--dark3);border:1px solid var(--border);width:600px;max-height:90vh;overflow-y:auto;">
+        <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;">Add New Property</div>
+          <button onclick="hideAddForm()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;">×</button>
+        </div>
+        <div class="form-body">
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label">Property Title</label>
+              <input type="text" class="field-input" placeholder="e.g. Luxury Villa La Marsa">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Property Type</label>
+              <select class="field-input">
+                <option>Villa</option>
+                <option>Apartment</option>
+                <option>Duplex</option>
+                <option>Commercial</option>
+                <option>Land</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label">Location</label>
+              <input type="text" class="field-input" placeholder="e.g. La Marsa, Tunis">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Listing Type</label>
+              <select class="field-input">
+                <option>For Sale</option>
+                <option>For Rent</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label">Price (TND)</label>
+              <input type="number" class="field-input" placeholder="e.g. 850000">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Area (m²)</label>
+              <input type="number" class="field-input" placeholder="e.g. 250">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label">Bedrooms</label>
+              <input type="number" class="field-input" placeholder="e.g. 4">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Bathrooms</label>
+              <input type="number" class="field-input" placeholder="e.g. 2">
+            </div>
+          </div>
+          <div class="field-group" style="margin-bottom:16px;">
+            <label class="field-label">Description</label>
+            <textarea class="field-input" style="resize:vertical;min-height:80px;" placeholder="Describe the property..."></textarea>
+          </div>
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label">Features</label>
+              <input type="text" class="field-input" placeholder="Pool, Garage, Garden...">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Status</label>
+              <select class="field-input">
+                <option>Active</option>
+                <option>Pending</option>
+                <option>Sold</option>
+                <option>Rented</option>
+              </select>
+            </div>
+          </div>
+          <button class="form-submit" onclick="submitProperty()">Add Property →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showAddForm(){document.getElementById('addModal').style.display='flex';}
+function hideAddForm(){document.getElementById('addModal').style.display='none';}
+function submitProperty(){
+  alert('Property added successfully! In the full Django version, this saves to the database.');
+  hideAddForm();
+}
+document.getElementById('addModal').addEventListener('click',function(e){if(e.target===this)hideAddForm();});
+</script>
+</body>
+</html>
